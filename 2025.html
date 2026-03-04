@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendário Set-Dez 2025</title>
+<style>
+:root { --yellow: #ffd600; }
+
+body {
+  font-family: Arial, sans-serif;
+  padding: 5px;
+  background-image: url('img/gears.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  position: relative;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: -1;
+}
+
+/* Cabeçalho com links de ano */
+#year-links {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 10px 0 20px 0;
+  font-weight: bold;
+  font-size: 26px;
+  color: #ffffff;
+}
+#year-links a { text-decoration: none; color: #ffffff; font-weight: bold; transition: color 0.3s; }
+#year-links a:hover { color: #ffeb3b; }
+
+/* Meses */
+.month {
+  width: 105%;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 12px;
+  border-radius: 15px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  background-image: url('img/image.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 4px solid #1976d2;
+  position: relative;
+  box-sizing: border-box;
+}
+.month::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(255,255,255,0.4);
+  border-radius: 15px;
+  z-index: 0;
+}
+.month > * { position: relative; z-index: 1; }
+
+/* Month Title centralizado, pulsante */
+.month-title {
+  text-align: center;
+  font-size: 36px;
+  font-weight: bold;
+  color: #6b5cee;
+  margin: 20px auto 30px auto;
+  display: block;
+  background: transparent;
+  border: none;
+  animation: titleGlow 1.8s infinite alternate;
+}
+@keyframes titleGlow {
+  0%   { text-shadow: 0 0 6px #ffffff, 0 0 12px #4fc3f7; }
+  100% { text-shadow: 0 0 14px #ffffff, 0 0 28px #4fc3f7; }
+}
+
+/* Dia atual destacado */
+.day.today {
+  position: relative;
+  border: 3px solid var(--yellow);
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(253, 216, 53, 0.7);
+  z-index: 2;
+}
+
+/* Engrenagem orbitando a borda do dia today */
+.day.today .gear-orbit {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  animation: rectOrbit 25s linear infinite;
+}
+@keyframes rectOrbit {
+  0%   { top: 0%; left: 0%; transform: translate(-50%, -50%) rotate(0deg); }
+  25%  { top: 0%; left: 100%; transform: translate(-50%, -50%) rotate(90deg); }
+  50%  { top: 100%; left: 100%; transform: translate(-50%, -50%) rotate(180deg); }
+  75%  { top: 100%; left: 0%; transform: translate(-50%, -50%) rotate(270deg); }
+  100% { top: 0%; left: 0%; transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Calendário */
+.calendar { display:flex; flex-wrap:wrap; width:100%; gap:5px; }
+.weekday, .day {
+  width: calc(100% / 7 - 5px);
+  border-radius:8px; border:1px solid #ccc;
+  text-align:center; box-sizing:border-box;
+  min-height:70px; display:flex; flex-direction:column;
+  justify-content:center; align-items:center; word-wrap:break-word;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.weekday { font-weight:bold; font-size:18px; background-color:#1976d2; color:white; min-height:50px; display:flex; align-items:center; justify-content:center; }
+.day { font-size:16px; padding:8px; background-color: rgba(255,255,255,0.9); position: relative; }
+.day.green { background-color: rgba(168, 230, 162, 0.85); }
+.day.red { background-color: rgba(248, 161, 161, 0.85); }
+.day.grey { background-color: transparent; border: none; }
+.day span { display:block; }
+.day .date { font-weight:bold; font-size:20px; margin-bottom:4px; color:#111; }
+.day .name { font-size:13px; font-weight:700; color:#333; white-space: nowrap; }
+.day:hover { transform: translateY(-3px); box-shadow:0 4px 10px rgba(0,0,0,0.15); }
+
+/* Feriados pulsantes */
+.holiday {
+  background-color:#d32f2f !important;
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
+  animation: pulseHoliday 1.5s infinite alternate;
+  border:none;
+}
+@keyframes pulseHoliday {
+  0% { transform: scale(1); box-shadow:0 0 5px #f44336; }
+  50% { transform: scale(1.05); box-shadow:0 0 15px #f44336; }
+  100% { transform: scale(1); box-shadow:0 0 5px #f44336; }
+}
+
+/* Tooltip central */
+.tooltip-central {
+  position: fixed;
+  top:50%; left:50%;
+  transform: translate(-50%, -50%);
+  background-color:#333; color:#fff;
+  padding:15px 25px; border-radius:12px;
+  font-size:18px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.3);
+  display:none;
+  z-index:1000;
+  text-align:center;
+}
+
+/* Responsividade */
+@media (max-width:600px){ 
+  .month-title{font-size:28px;} 
+  .weekday{font-size:14px;} 
+  .day{min-height:50px;font-size:12px;} 
+  .day .date{font-size:16px;} 
+  .day .name{font-size:12px; line-height:1.1;} 
+}
+@media (max-width:400px){ 
+  .month{width:98%; padding:6px;}
+  .month-title{font-size:24px;}
+  .weekday{font-size:12px; min-height:40px;}
+  .day{min-height:50px;font-size:10px;}
+  .day .date{font-size:14px;}
+  .day .name{font-size:10px; line-height:1.1;}
+}
+
+/* Rodapé */
+.footer {
+  text-align:center;
+  font-size:16px;
+  color:#fff;
+  background-color: rgba(0,0,0,0.5);
+  padding:12px 0;
+  border-radius:10px;
+  margin-top:40px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.3);
+  position: relative;
+}
+.footer .highlight {
+  font-weight:bold;
+  color:#ffeb3b;
+  text-shadow:0 0 5px #ffeb3b,0 0 10px #ffeb3b,0 0 15px #ffd700;
+  animation:glow 2s infinite alternate;
+}
+@keyframes glow {
+  from {text-shadow:0 0 5px #ffeb3b,0 0 10px #ffeb3b,0 0 15px #ffd700;}
+  to   {text-shadow:0 0 10px #ffeb3b,0 0 20px #ffeb3b,0 0 25px #ffd700;}
+}
+</style>
+</head>
+<body>
+<!-- Links de anos -->
+<div id="year-links">
+  <a href="2025.html">2025</a>
+  <a href="2026.html">2026</a>
+</div>
+<div id="calendar-container"></div>
+<div class="tooltip-central" id="tooltip"></div>
+
+<script>
+const calendarContainer = document.getElementById('calendar-container');
+const tooltip = document.getElementById('tooltip');
+
+const months = [
+  {name:"Setembro", month:8},
+  {name:"Outubro", month:9},
+  {name:"Novembro", month:10},
+  {name:"Dezembro", month:11}
+];
+const weekdays=["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
+const year=2025;
+const names=["Gabriel","Renato"];
+const cicloDias=3;
+let escalaCounter=1;
+
+// Feriados nacionais 2025
+const feriados = {
+  "01-01":"Confraternização Universal",
+  "21-04":"Tiradentes",
+  "01-05":"Dia do Trabalho",
+  "07-09":"Independência do Brasil",
+  "12-10":"Nossa Senhora Aparecida",
+  "02-11":"Finados",
+  "15-11":"Proclamação da República",
+  "20-11":"Consciência Negra",
+  "25-12":"Natal"
+};
+
+const today = new Date();
+const todayDate = today.getDate();
+const todayMonth = today.getMonth();
+const todayYear = today.getFullYear();
+
+months.forEach(m=>{
+  const monthDiv=document.createElement('div');
+  monthDiv.className='month';
+  monthDiv.id=`month-${m.month}`; // Adiciona ID para rolar até o mês atual
+
+  const monthTitle=document.createElement('div');
+  monthTitle.className='month-title';
+  monthTitle.textContent=`${m.name} ${year}`;
+  monthDiv.appendChild(monthTitle);
+
+  const calendarDiv=document.createElement('div');
+  calendarDiv.className='calendar';
+
+  weekdays.forEach(w=>{
+    const wdDiv=document.createElement('div');
+    wdDiv.className='weekday';
+    wdDiv.textContent=w;
+    calendarDiv.appendChild(wdDiv);
+  });
+
+  const firstDay=new Date(year,m.month,1);
+  const numDays=new Date(year,m.month+1,0).getDate();
+  let dayNumber=1;
+  const totalCells=42;
+
+  for(let i=0;i<totalCells;i++){
+    const dayDiv=document.createElement('div');
+    dayDiv.className='day';
+    if(i<firstDay.getDay()||dayNumber>numDays){
+      dayDiv.classList.add('grey');
+    }else{
+      const nomeIndex=Math.floor(escalaCounter/cicloDias)%names.length;
+      const name=names[nomeIndex];
+      dayDiv.innerHTML=`<span class="date">${dayNumber}</span><span class="name">${name}</span>`;
+      if(name==="Renato") dayDiv.classList.add("green");
+      else dayDiv.classList.add("red");
+
+      const key = `${String(dayNumber).padStart(2,'0')}-${String(m.month+1).padStart(2,'0')}`;
+      if(feriados[key]){
+        const tooltipText = `${String(dayNumber).padStart(2,'0')}/${String(m.month+1).padStart(2,'0')}/2025 - Feriado Nacional ${feriados[key]}`;
+        dayDiv.classList.add("holiday");
+        dayDiv.setAttribute("data-tooltip", tooltipText);
+        dayDiv.addEventListener('mouseenter',()=>{ 
+          tooltip.style.display='block'; 
+          tooltip.textContent=tooltipText; 
+          setTimeout(()=>{ tooltip.style.display='none'; },2000);
+        });
+        dayDiv.addEventListener('mouseleave',()=>{ tooltip.style.display='none'; });
+        dayDiv.addEventListener('click',()=>{ 
+          tooltip.style.display='block'; 
+          tooltip.textContent=tooltipText; 
+          setTimeout(()=>{ tooltip.style.display='none'; },2000);
+        });
+      }
+
+      // Dia atual
+      if(dayNumber===todayDate && m.month===todayMonth && year===todayYear){
+          dayDiv.classList.add("today");
+          const gear=document.createElement('img');
+          gear.src='img/gear.png';
+          gear.className='gear-orbit';
+          dayDiv.appendChild(gear);
+      }
+
+      dayNumber++;
+      escalaCounter++;
+    }
+    calendarDiv.appendChild(dayDiv);
+  }
+
+  monthDiv.appendChild(calendarDiv);
+  calendarContainer.appendChild(monthDiv);
+});
+
+// Rodapé
+const footer=document.createElement('footer');
+footer.className='footer';
+footer.innerHTML='Desenvolvido por <span class="highlight">Fernando Roque</span> &copy; Todos os direitos reservados';
+document.body.appendChild(footer);
+
+// Tooltip desaparece ao scroll
+window.addEventListener('scroll',()=>{ tooltip.style.display='none'; });
+
+// 🔽 NOVA FUNÇÃO: rolar automaticamente até o mês atual 🔽
+window.addEventListener('load', ()=>{
+  if (todayYear === year && todayMonth >= 8 && todayMonth <= 11) {
+    const currentMonthDiv = document.getElementById(`month-${todayMonth}`);
+    if (currentMonthDiv) {
+      setTimeout(() => {
+        currentMonthDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 500);
+    }
+  }
+});
+</script>
+</body>
+</html>
